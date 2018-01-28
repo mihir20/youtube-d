@@ -1,15 +1,16 @@
 const { ipcRenderer } = require('electron')
-$(document).ready(() => {
+$(document).on('ready',() => {
   $('#footer').hide();
-  $('#submitUrlBtn').click(() => {
+  $('#submitUrlBtn').on('click',() => {
     var url = $('#urlInput').val();
     $('#videoList').empty();
 
     // send url to index.js 
-    ipcRenderer.send('asynchronous-message', url)
+    if(url!=null&&url!='')ipcRenderer.send('asynchronous-message', url);
+    else alert("please enter url");
   });
 
-  $('#editDownloadLoc').click(() => {
+  $('#editDownloadLoc').on('click',() => {
     ipcRenderer.send('download-dir')
   });
 
