@@ -1,6 +1,6 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 
-function createWindow () {
+function createWindow() {
   // Create the browser window.
   let win = new BrowserWindow({
     width: 800,
@@ -12,6 +12,15 @@ function createWindow () {
 
   // and load the index.html of the app.
   win.loadFile('index.html')
+
+  // receive message from index.html 
+  ipcMain.on('asynchronous-message', (event, arg) => {
+    console.log(arg);
+
+    // send message to index.html
+    event.sender.send('asynchronous-reply', 'hello');
+  });
+  
 }
 
 app.whenReady().then(createWindow)
