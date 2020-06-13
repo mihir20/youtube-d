@@ -1,5 +1,5 @@
 {
-  "name": "youtube-dl",
+  "name": "youtube-d",
   "version": "1.0.0",
   "description": "youtube downloader",
   "main": "index.js",
