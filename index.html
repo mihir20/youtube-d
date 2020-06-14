@@ -8,13 +8,15 @@
 
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+
   <title>
     Youtube-d
   </title>
 </head>
 
 <body>
-  <div class="jumbotron text-center bg-dark text-white">
+  <div class="jumbotron text-center bg-dark text-white" style="margin-top: -4px;">
     <h1><strong>Youtube-d</strong></h1>
     <p>download youtube videos and playlist!</p>
   </div>
@@ -26,6 +28,11 @@
             Paste link to download
           </strong>
         </h3>
+        <h5 >
+          <strong>Download Location</strong>
+          <small id="downloadLoc"></small>
+          <span id="editDownloadLoc" class="text-danger" href="#"><span class="fa fa-pencil"></span></span>
+        </h5>
       </div>
       <div class="card-body">
         <div class="input-group mb-3">
@@ -59,6 +66,7 @@
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
   <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
   <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
+  <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="js/index.js"></script>
 </body>
 

@@ -7,7 +7,11 @@ $(document).ready(() => {
 
     // send url to index.js 
     ipcRenderer.send('asynchronous-message', url)
-  })
+  });
+
+  $('#editDownloadLoc').click(()=>{
+    ipcRenderer.send('download-dir')
+  });
 
   // receive message from index.js
   ipcRenderer.on('asynchronous-reply', (event, arg) => {
@@ -17,8 +21,14 @@ $(document).ready(() => {
     } else if (arg.progress) {
       setProgress(arg.progress, arg.index);
     }
+  });
 
-  })
+  ipcRenderer.on('download-dir', (event, arg) => {
+    console.log(arg);
+    $('#downloadLoc')
+    .text(`${arg.location}`)
+  });
+
 })
 
 const setInfo = (info) => {
