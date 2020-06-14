@@ -10,10 +10,11 @@ $(document).ready(()=>{
 
     // receive message from index.js
     ipcRenderer.on('asynchronous-reply', (event, arg) => {
-      console.log(arg);
       if(arg.info){
         setInfo(arg.info);
-      } 
+      }else if(arg.progress){
+        setProgress(arg.progress);
+      }
 
     })
 
@@ -25,4 +26,9 @@ const setInfo = (info)=>{
   $('#videoImg').attr("src", info.thumbnail);
   $('#videoTitle').text(info.title);
   $('#videoDetails').text(info.description);
+}
+
+const setProgress = (progress)=>{
+  $('#progressBar').css("width",`${progress}%`)
+  $('#progressBar').text(`${progress}%`)
 }

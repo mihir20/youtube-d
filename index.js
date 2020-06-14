@@ -38,13 +38,19 @@ function downLoadVideo(vidUrl,event) {
     console.log('filename:', info._filename)
     console.log('format id:', info.format_id)
     event.sender.send('asynchronous-reply', {info});
-    downloadWithFileName(url,info._filename);
+    downloadWithFileName(url,info,event);
   })
 }
 
-function downloadWithFileName(url,filename){
+function downloadWithFileName(url,info,event){
   const video = youtubedl(url,['--format=18']);
-  video.pipe(fs.createWriteStream(downloadPath+'/'+filename));
+  let pos = 0;
+  video.on('data',function data(chunk){
+    pos+=chunk.length;
+    var progress =info.filesize?(pos / info.filesize * 100).toFixed(2):100;
+    event.sender.send('asynchronous-reply', {progress});
+  })
+  video.pipe(fs.createWriteStream(downloadPath+'/'+info._filename));
 }
 
 app.whenReady().then(createWindow)
