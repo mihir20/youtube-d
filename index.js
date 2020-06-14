@@ -1,5 +1,8 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const youtubedl = require('youtube-dl');
+const fs = require('fs');
+
+let downloadPath = __dirname+'/downloads';
 
 function createWindow() {
   // Create the browser window.
@@ -34,7 +37,13 @@ function downLoadVideo(vidUrl) {
     console.log('description:', info.description)
     console.log('filename:', info._filename)
     console.log('format id:', info.format_id)
+    downloadWithFileName(url,info._filename);
   })
+}
+
+function downloadWithFileName(url,filename){
+  const video = youtubedl(url,['--format=18']);
+  video.pipe(fs.createWriteStream(downloadPath+'/'+filename));
 }
 
 app.whenReady().then(createWindow)
