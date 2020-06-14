@@ -3,7 +3,7 @@ const youtubedl = require('youtube-dl');
 const fs = require('fs');
 
 // let downloadPath = __dirname + '/downloads';
-let downloadPath = __dirname;
+let downloadPath = app.getPath('downloads');
 
 function createWindow() {
   // Create the browser window.
