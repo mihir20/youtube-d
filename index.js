@@ -2,7 +2,8 @@ const { app, BrowserWindow, ipcMain } = require('electron')
 const youtubedl = require('youtube-dl');
 const fs = require('fs');
 
-let downloadPath = __dirname + '/downloads';
+// let downloadPath = __dirname + '/downloads';
+let downloadPath = __dirname;
 
 function createWindow() {
   // Create the browser window.
