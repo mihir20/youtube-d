@@ -15,7 +15,7 @@ $(document).ready(() => {
 
   // receive message from index.js
   ipcRenderer.on('asynchronous-reply', (event, arg) => {
-    // console.log(arg);
+    console.log(arg);
     if (arg.info) {
       setInfo(arg.info);
     } else if (arg.progress) {

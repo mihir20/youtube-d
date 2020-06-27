@@ -1,8 +1,10 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const youtubedl = require('youtube-dl');
 const fs = require('fs');
+const { download } = require('electron-dl');
 
 const Store = require('./helper/localdatastore');
+const { url } = require('inspector');
 
 // let downloadPath = __dirname + '/downloads';
 let downloadPath = app.getPath('downloads');
@@ -16,11 +18,14 @@ const store = new Store({
   }
 });
 
+let win;
+
 function createWindow() {
   // Create the browser window.
-  let win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 800,
     height: 600,
+    icon:false,
     webPreferences: {
       nodeIntegration: true
     }
@@ -28,13 +33,6 @@ function createWindow() {
 
   // and load the index.html of the app.
   win.loadFile('index.html')
-  // receive message from index.html 
-  ipcMain.on('asynchronous-message', (event, arg) => {
-    console.log(arg);
-    downLoadVideo(arg, event);
-    // send message to index.html
-    // event.sender.send('asynchronous-reply', 'hello');
-  });
 
   ipcMain.on('download-dir', async (event, arg) => {
     const result = await dialog.showOpenDialog(win, {
@@ -46,28 +44,80 @@ function createWindow() {
       event.sender.send('download-dir', { location: result.filePaths });
     }
   });
+
+  //run after page is loaded 
   win.webContents.on('did-finish-load', () => {
     downloadPath = store.get('downloadPath');
     win.webContents.send('download-dir', { location: downloadPath });
   });
+
+  // receive message from index.html 
+  ipcMain.on('asynchronous-message', (event, arg) => {
+    // console.log(arg);
+    getInfoAndDownload(arg, event);
+  });
 }
 
-function downLoadVideo(url, event) {
+function getInfoAndDownload(url, event) {
   // const url = 'http://www.youtube.com/watch?v=WKsjaOqDXgg';
   // const url = 'https://www.youtube.com/playlist?list=PLEFA9E9D96CB7F807'
+
+  //****************************************//
+
   youtubedl.getInfo(url, (err, info) => {
     if (err) throw err
     event.sender.send('asynchronous-reply', { info });
     if (info.length > 0) {
-      for (var i = 0; i < info.length; i++) {
-        downloadWithFileName(info[i].webpage_url, info[i], event, i);
-      }
+      downloadList(info, event);
     } else {
-      downloadWithFileName(url, info, event, null);
+      downloadWithFileName(url,info, event, null);
     }
   })
 }
 
+function downloadVideo(info, event, index) {
+  download(BrowserWindow.getFocusedWindow(),
+    info.url,
+    {
+      directory: `${downloadPath}/${info.filename}`,
+      onProgress: (status) => {
+        // console.log(status);
+        var progress = (status.percent * 100).toFixed(2);
+        event.sender.send('asynchronous-reply', { progress, index });
+      }
+    })
+    .then((dl) => {
+      console.log(dl);
+      console.log('NO ERROR')
+    }, (err) => {
+      console.log(err)
+    });
+}
+
+function downloadList(info, event) {
+  const totalCount = info.length;
+  let i = 0;
+  downloadVideoFromList(info,event,i);
+}
+
+const downloadVideoFromList=(info,event,i)=>{
+  if(i==info.length)return;
+  download(BrowserWindow.getFocusedWindow(),
+    info[i].url,
+    {
+      directory: `${downloadPath}/${info[i].filename}`,
+      onProgress: (status) => {
+        // console.log(status);
+        var progress = (status.percent * 100).toFixed(2);
+        event.sender.send('asynchronous-reply', { progress, index:i });
+      }
+    }).then(()=>{
+      i++;
+      downloadVideoFromList(info,event,i);
+    },(err)=>{
+      throw err;
+    })
+}
 function downloadWithFileName(url, info, event, index) {
   const video = youtubedl(url, ['--format=18']);
   let pos = 0;
@@ -80,5 +130,4 @@ function downloadWithFileName(url, info, event, index) {
   })
   video.pipe(fs.createWriteStream(downloadPath + '/' + info._filename));
 }
-
 app.whenReady().then(createWindow)
