@@ -95,28 +95,13 @@ function downloadVideo(info, event, index) {
 }
 
 function downloadList(info, event) {
-  const totalCount = info.length;
-  let i = 0;
   downloadVideoFromList(info,event,i);
 }
 
 const downloadVideoFromList=(info,event,i)=>{
-  if(i==info.length)return;
-  download(BrowserWindow.getFocusedWindow(),
-    info[i].url,
-    {
-      directory: `${downloadPath}/${info[i].filename}`,
-      onProgress: (status) => {
-        // console.log(status);
-        var progress = (status.percent * 100).toFixed(2);
-        event.sender.send('asynchronous-reply', { progress, index:i });
-      }
-    }).then(()=>{
-      i++;
-      downloadVideoFromList(info,event,i);
-    },(err)=>{
-      throw err;
-    })
+  for(let i=0;i<info.length;i++){
+    downloadWithFileName(info[i].webpage_url, info[i], event, i);
+  }
 }
 function downloadWithFileName(url, info, event, index) {
   const video = youtubedl(url, ['--format=18']);
