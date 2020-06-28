@@ -9,14 +9,15 @@ $(document).ready(() => {
     ipcRenderer.send('asynchronous-message', url)
   });
 
-  $('#editDownloadLoc').click(()=>{
+  $('#editDownloadLoc').click(() => {
     ipcRenderer.send('download-dir')
   });
 
   // receive message from index.js
   ipcRenderer.on('asynchronous-reply', (event, arg) => {
-    console.log(arg);
+    // console.log(arg);
     if (arg.info) {
+      console.log(arg);
       setInfo(arg.info);
     } else if (arg.progress) {
       setProgress(arg.progress, arg.index);
@@ -26,9 +27,12 @@ $(document).ready(() => {
   ipcRenderer.on('download-dir', (event, arg) => {
     console.log(arg);
     $('#downloadLoc')
-    .text(`${arg.location}`)
+      .text(`${arg.location}`)
   });
 
+  $('#pauseBtn').click(()=>{
+    ipcRenderer.send('pause-download',null)
+  })
 })
 
 const setInfo = (info) => {
@@ -42,6 +46,7 @@ const setInfo = (info) => {
             <div class="media-body">
               <h4 id="videoTitle${i}">${info[i].title}</h4>
               <p class="truncate" id="videoDetails${i}">${info[i].description}</p>
+              <p><strong>Video Size:</strong>${(info[i].filesize / 1000000).toFixed(2)}MB</p>
               <div class="progress">
                 <div id="progressBar${i}" class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width:0%"></div>
               </div>
@@ -58,8 +63,12 @@ const setInfo = (info) => {
         <div class="media-body">
           <h4 id="videoTitle">${info.title}</h4>
           <p class="truncate" id="videoDetails">${info.description}</p>
+          <p><strong>Video Size:</strong>${(info.filesize / 1000000).toFixed(2)}MB</p>
           <div class="progress">
             <div id="progressBar" class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width:0%"></div>
+          </div>
+          <div class="d-flex">
+            <button class="btn btn-primary mt-2 justify-contnet-center" id="pauseBtn">Pause</button>
           </div>
         </div>
       </div>
@@ -72,13 +81,13 @@ const setProgress = (progress, i) => {
   if (i != null) {
     $(`#progressBar${i}`).css("width", `${progress}%`)
     $(`#progressBar${i}`).text(`${progress}%`)
-    if(progress>=100){
+    if (progress >= 100) {
       $(`#progressBar${i}`).removeClass('progress-bar-striped')
     }
   } else {
     $(`#progressBar`).css("width", `${progress}%`)
     $(`#progressBar`).text(`${progress}%`)
-    if(progress>=100){
+    if (progress >= 100) {
       $(`#progressBar`).removeClass('progress-bar-striped')
     }
   }

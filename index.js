@@ -104,7 +104,7 @@ const downloadVideoFromList=(info,event)=>{
   }
 }
 function downloadWithFileName(url, info, event, index) {
-  const video = youtubedl(url, ['--format=18']);
+  const video = youtubedl(url, ['--format=best']);
   let pos = 0;
   video.on('data', function data(chunk) {
     pos += chunk.length;
@@ -114,7 +114,23 @@ function downloadWithFileName(url, info, event, index) {
     }
   })
   downloadPath = getDownloadPath();
-  video.pipe(fs.createWriteStream(downloadPath + '/' + info._filename));
+  output = downloadPath + '/' + info._filename;
+  var stream;
+  if (fs.existsSync(output)) {
+    pos = fs.statSync(output).size
+  }
+  if(pos==0){
+    stream=video.pipe(fs.createWriteStream(output));
+  }else{
+    console.log("RESUMED")
+    stream=video.pipe(fs.createWriteStream(output, { flags: 'a' }));
+  }
+  ipcMain.on('pause-download',(event,arg)=>{
+    // if(arg==index){
+      stream.pause();
+      console.log("PAUSED")
+    // }
+  });
 }
 const getDownloadPath=()=>{
   return store.get('downloadPath');

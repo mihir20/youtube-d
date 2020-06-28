@@ -28,7 +28,7 @@
             Paste link to download
           </strong>
         </h3>
-        <h5 >
+        <h5>
           <strong>Download Location</strong>
           <small id="downloadLoc"></small>
           <span id="editDownloadLoc" class="text-danger" href="#"><span class="fa fa-pencil"></span></span>
@@ -39,7 +39,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text">URL</span>
           </div>
-          <input id="urlInput" type="text" class="form-control" placeholder="Enter Url">
+          <input id="urlInput" type="text" class="form-control" placeholder="Enter Url" required>
         </div>
         <div class="d-flex justify-content-center">
           <button class="btn btn-dark" type="submit" id="submitUrlBtn">download</button>
@@ -53,12 +53,17 @@
               <div class="media-body">
                 <h4 id="videoTitle"></h4>
                 <p id="videoDetails">Lorem ipsum...</p>
+                <p><strong>Video Size:</strong>24.45MB</p>
                 <div class="progress">
-                  <div id="progressBar" class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width:0%"></div>
+                  <div id="progressBar" class="progress-bar bg-success progress-bar-striped progress-bar-animated"
+                    style="width:0%"></div>
+                </div>
+                <div class="d-flex">
+                  <button class="btn btn-primary mt-2 justify-contnet-center" id="pauseBtn">Pause</button>
                 </div>
               </div>
             </div>
-        </div> -->
+          </div> -->
         </div>
       </div>
     </div>
