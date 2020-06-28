@@ -19,6 +19,7 @@ const store = new Store({
 });
 
 let win;
+let streams = [];
 
 function createWindow() {
   // Create the browser window.
@@ -55,6 +56,10 @@ function createWindow() {
   ipcMain.on('asynchronous-message', (event, arg) => {
     // console.log(arg);
     getInfoAndDownload(arg, event);
+  });
+
+  ipcMain.on('pause-download',(event,arg)=>{
+    console.log("pasue event");
   });
 }
 
@@ -120,17 +125,12 @@ function downloadWithFileName(url, info, event, index) {
     pos = fs.statSync(output).size
   }
   if(pos==0){
-    stream=video.pipe(fs.createWriteStream(output));
+    stream=video.pipe(fs.createWriteStream(output)).on('start')
   }else{
     console.log("RESUMED")
     stream=video.pipe(fs.createWriteStream(output, { flags: 'a' }));
   }
-  ipcMain.on('pause-download',(event,arg)=>{
-    // if(arg==index){
-      stream.pause();
-      console.log("PAUSED")
-    // }
-  });
+  
 }
 const getDownloadPath=()=>{
   return store.get('downloadPath');
