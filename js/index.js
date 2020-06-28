@@ -72,8 +72,14 @@ const setProgress = (progress, i) => {
   if (i != null) {
     $(`#progressBar${i}`).css("width", `${progress}%`)
     $(`#progressBar${i}`).text(`${progress}%`)
+    if(progress>=100){
+      $(`#progressBar${i}`).removeClass('progress-bar-striped')
+    }
   } else {
     $(`#progressBar`).css("width", `${progress}%`)
     $(`#progressBar`).text(`${progress}%`)
+    if(progress>=100){
+      $(`#progressBar`).removeClass('progress-bar-striped')
+    }
   }
 }

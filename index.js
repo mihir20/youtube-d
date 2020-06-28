@@ -95,10 +95,10 @@ function downloadVideo(info, event, index) {
 }
 
 function downloadList(info, event) {
-  downloadVideoFromList(info,event,i);
+  downloadVideoFromList(info,event);
 }
 
-const downloadVideoFromList=(info,event,i)=>{
+const downloadVideoFromList=(info,event)=>{
   for(let i=0;i<info.length;i++){
     downloadWithFileName(info[i].webpage_url, info[i], event, i);
   }
