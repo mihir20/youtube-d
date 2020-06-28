@@ -113,6 +113,10 @@ function downloadWithFileName(url, info, event, index) {
       event.sender.send('asynchronous-reply', { progress, index });
     }
   })
+  downloadPath = getDownloadPath();
   video.pipe(fs.createWriteStream(downloadPath + '/' + info._filename));
+}
+const getDownloadPath=()=>{
+  return store.get('downloadPath');
 }
 app.whenReady().then(createWindow)
