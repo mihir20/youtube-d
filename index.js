@@ -59,7 +59,10 @@ function createWindow() {
   });
 
   ipcMain.on('pause-download',(event,arg)=>{
-    console.log("pasue event");
+    console.log("pasue event: ",streams.length);
+    if(streams.length>0){
+      streams[0].destroy();
+    }
   });
 }
 
@@ -121,15 +124,8 @@ function downloadWithFileName(url, info, event, index) {
   downloadPath = getDownloadPath();
   output = downloadPath + '/' + info._filename;
   var stream;
-  if (fs.existsSync(output)) {
-    pos = fs.statSync(output).size
-  }
-  if(pos==0){
-    stream=video.pipe(fs.createWriteStream(output)).on('start')
-  }else{
-    console.log("RESUMED")
-    stream=video.pipe(fs.createWriteStream(output, { flags: 'a' }));
-  }
+  stream=video.pipe(fs.createWriteStream(output))
+  streams.push(video);
   
 }
 const getDownloadPath=()=>{

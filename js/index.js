@@ -1,5 +1,5 @@
+const { ipcRenderer } = require('electron')
 $(document).ready(() => {
-  const { ipcRenderer } = require('electron')
   $('#footer').hide();
   $('#submitUrlBtn').click(() => {
     var url = $('#urlInput').val();
@@ -29,10 +29,6 @@ $(document).ready(() => {
     $('#downloadLoc')
       .text(`${arg.location}`)
   });
-
-  $('#pauseBtn').click(()=>{
-    ipcRenderer.send('pause-download',null)
-  })
 })
 
 const setInfo = (info) => {
@@ -67,9 +63,6 @@ const setInfo = (info) => {
           <div class="progress">
             <div id="progressBar" class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width:0%"></div>
           </div>
-          <div class="d-flex">
-            <button class="btn btn-primary mt-2 justify-contnet-center" id="pauseBtn">Pause</button>
-          </div>
         </div>
       </div>
     </div>`
@@ -91,4 +84,8 @@ const setProgress = (progress, i) => {
       $(`#progressBar`).removeClass('progress-bar-striped')
     }
   }
+}
+
+const pauseDownload=(i)=>{
+  ipcRenderer.send('pause-download',i);
 }
