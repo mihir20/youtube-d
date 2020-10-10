@@ -40,9 +40,11 @@ function createWindow() {
       properties: ['openDirectory']
     })
     console.log('directories selected', result.filePaths)
-    if (result && result.filePaths) {
+    if (result && result.filePaths && result.filePaths.length==1) {
       store.set('downloadPath', result.filePaths);
       event.sender.send('download-dir', { location: result.filePaths });
+    }else{
+      event.sender.send('error',"invalid path selected");
     }
   });
 

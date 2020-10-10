@@ -1,4 +1,5 @@
-const { ipcRenderer } = require('electron')
+const { ipcRenderer } = require('electron');
+const { event } = require('jquery');
 $(document).on('ready',() => {
   $('#footer').hide();
   $('#submitUrlBtn').on('click',() => {
@@ -30,6 +31,11 @@ $(document).on('ready',() => {
     $('#downloadLoc')
       .text(`${arg.location}`)
   });
+
+  ipcRenderer.on("error",(event,arg)=>{
+    console.log(arg);
+    alert(arg);
+  })
 })
 
 const setInfo = (info) => {
