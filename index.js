@@ -68,6 +68,7 @@ function createWindow() {
       }
       catch(err){
         console.log(err);
+        event.sender.send('error',err);
       }
     }
   });
