@@ -61,7 +61,12 @@ function createWindow() {
   ipcMain.on('pause-download',(event,arg)=>{
     console.log("pasue event: ",streams.length);
     if(streams.length>0){
-      streams[0].destroy();
+      try{
+        console.log(streams[0].unresolve());
+      }
+      catch(err){
+        console.log(err);
+      }
     }
   });
 }
@@ -83,24 +88,6 @@ function getInfoAndDownload(url, event) {
   })
 }
 
-function downloadVideo(info, event, index) {
-  download(BrowserWindow.getFocusedWindow(),
-    info.url,
-    {
-      directory: `${downloadPath}/${info.filename}`,
-      onProgress: (status) => {
-        // console.log(status);
-        var progress = (status.percent * 100).toFixed(2);
-        event.sender.send('asynchronous-reply', { progress, index });
-      }
-    })
-    .then((dl) => {
-      console.log(dl);
-      console.log('NO ERROR')
-    }, (err) => {
-      console.log(err)
-    });
-}
 
 function downloadList(info, event) {
   downloadVideoFromList(info,event);

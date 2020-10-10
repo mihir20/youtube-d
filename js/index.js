@@ -63,6 +63,9 @@ const setInfo = (info) => {
           <div class="progress">
             <div id="progressBar" class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width:0%"></div>
           </div>
+          <div class="d-flex">
+            <button class="btn btn-primary mt-2 justify-contnet-center" id="pauseBtn" onclick="pauseDownload(${null})">Pause</button>
+          </div>
         </div>
       </div>
     </div>`
